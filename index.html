@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dice Roller Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Dice Roller Game</h1>
+        <div class="players">
+            <div class="player">
+                <h2>Vaishali</h2>
+                <p>Score: <span id="score1">0</span></p>
+                <div class="dice" id="dice1">🎲</div>
+            </div>
+            <div class="player">
+                <h2>Shivratna</h2>
+                <p>Score: <span id="score2">0</span></p>
+                <div class="dice" id="dice2">🎲</div>
+            </div>
+            <div class="player">
+                <h2>Payal</h2>
+                <p>Score: <span id="score3">0</span></p>
+                <div class="dice" id="dice3">🎲</div>
+            </div>
+        </div>
+
+        <button id="rollBtn">Roll Dice</button>
+        <button id="resetBtn" style="display: none;">Play Again</button>
+
+        <h2 id="winner"></h2>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
