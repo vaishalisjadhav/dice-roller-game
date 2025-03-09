@@ -4,35 +4,180 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dice Roller Game</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #f0f0f0, #ffffff);
+            color: #333;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 25px;
+            font-size: 34px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #007bff;
+            text-shadow: 2px 2px 10px rgba(0, 123, 255, 0.3);
+        }
+
+        p#turn {
+            font-size: 20px;
+            font-weight: 500;
+            margin-bottom: 30px;
+            background: rgba(0, 123, 255, 0.1);
+            padding: 12px 24px;
+            border-radius: 12px;
+            color: #007bff;
+            border: 2px solid #007bff;
+        }
+
+        .game-container {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .player {
+            width: 180px;
+            height: 220px;
+            background: #fff;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: bold;
+            transition: transform 0.3s, background 0.3s;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            border: 2px solid #ddd;
+        }
+
+        .player.active {
+            transform: scale(1.1);
+            border: 3px solid #007bff;
+            background: rgba(0, 123, 255, 0.1);
+        }
+
+        .dice {
+            font-size: 60px;
+            margin-top: 15px;
+        }
+
+        .roll-btn {
+            padding: 14px 28px;
+            font-size: 20px;
+            font-weight: bold;
+            border: none;
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: 0.3s;
+            box-shadow: 0px 5px 12px rgba(0, 123, 255, 0.5);
+        }
+
+        .roll-btn:hover {
+            background: #0056b3;
+        }
+
+        .winner {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+            display: none;
+            background: rgba(0, 123, 255, 0.1);
+            padding: 12px 24px;
+            border-radius: 12px;
+            color: #007bff;
+            border: 2px solid #007bff;
+            text-shadow: 1px 1px 8px rgba(0, 123, 255, 0.3);
+        }
+
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Dice Roller Game</h1>
-        <div class="players">
-            <div class="player">
-                <h2>Vaishali</h2>
-                <p>Score: <span id="score1">0</span></p>
-                <div class="dice" id="dice1">🎲</div>
-            </div>
-            <div class="player">
-                <h2>Shivratna</h2>
-                <p>Score: <span id="score2">0</span></p>
-                <div class="dice" id="dice2">🎲</div>
-            </div>
-            <div class="player">
-                <h2>Payal</h2>
-                <p>Score: <span id="score3">0</span></p>
-                <div class="dice" id="dice3">🎲</div>
-            </div>
+
+    <h1>Dice Roller Game</h1>
+    <p id="turn">Vaishali's Turn</p>
+    
+    <div class="game-container">
+        <div class="player active" id="player1">
+            Vaishali
+            <div class="dice">🎲</div>
+            <p>Score: <span id="score1">0</span></p>
         </div>
-
-        <button id="rollBtn">Roll Dice</button>
-        <button id="resetBtn" style="display: none;">Play Again</button>
-
-        <h2 id="winner"></h2>
+        <div class="player" id="player2">
+            Shivratna
+            <div class="dice">🎲</div>
+            <p>Score: <span id="score2">0</span></p>
+        </div>
+        <div class="player" id="player3">
+            Payal
+            <div class="dice">🎲</div>
+            <p>Score: <span id="score3">0</span></p>
+        </div>
     </div>
 
-    <script src="script.js"></script>
+    <button class="roll-btn" onclick="rollDice()">Roll Dice</button>
+    <p class="winner" id="winnerText"></p>
+
+    <script>
+        let scores = [0, 0, 0];
+        let turn = 0;
+        const playerNames = ["Vaishali", "Shivratna", "Payal"];
+
+        function rollDice() {
+            let diceValue = Math.floor(Math.random() * 6) + 1;
+            document.querySelectorAll(".dice")[turn].textContent = getDiceEmoji(diceValue);
+            scores[turn] += diceValue;
+            document.getElementById(`score${turn + 1}`).textContent = scores[turn];
+
+            document.querySelectorAll(".player")[turn].classList.remove("active");
+
+            turn++;
+            if (turn < 3) {
+                document.getElementById("turn").textContent = `${playerNames[turn]}'s Turn`;
+                document.querySelectorAll(".player")[turn].classList.add("active");
+            } else {
+                determineWinner();
+            }
+        }
+
+        function determineWinner() {
+            let maxScore = Math.max(...scores);
+            let winners = [];
+
+            scores.forEach((score, index) => {
+                if (score === maxScore) {
+                    winners.push(playerNames[index]);
+                }
+            });
+
+            document.getElementById("turn").style.display = "none";
+            document.getElementById("winnerText").textContent = `🏆 Winner: ${winners.join(", ")} with ${maxScore} points! 🎉`;
+            document.getElementById("winnerText").style.display = "block";
+        }
+
+        function getDiceEmoji(value) {
+            const diceEmojis = ["🎲", "⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
+            return diceEmojis[value];
+        }
+    </script>
+
 </body>
 </html>
